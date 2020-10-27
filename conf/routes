@@ -1,5 +1,7 @@
 # TodoList
 GET     /                           controllers.TodoListController.index
+GET     /hello                      controllers.TodoListController.helloWorld
+GET     /hello/:name                controllers.TodoListController.helloToAny(name: String)
 
 # Formapp
 ## Normal
