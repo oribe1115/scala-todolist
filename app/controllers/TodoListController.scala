@@ -31,7 +31,7 @@ class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) exten
     }
 
   def list =
-    Action { request =>
+    Action { implicit request =>
       val taskList = tasks.list
       Ok(views.html.list(taskList))
     }
