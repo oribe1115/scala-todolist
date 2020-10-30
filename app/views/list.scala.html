@@ -1,0 +1,38 @@
+@(taskList: Seq[models.Task])
+
+@import helper._
+
+@taskRow(task: models.Task) = {
+    <tr id="@task.id">
+        <td class="id">@task.id</td>
+        <td class="title">@task.title</td>
+        <td class="description">@task.description</td>
+        <td class="isDone">@task.isDone</td>
+        <td class="date">@task.createdAt</td>
+    </tr>
+}
+
+@views.html.main("") {
+    <div class="w3-row">
+        <div class="w3-half">
+            <h3>登録済みタスク</h3>
+        </div>
+    </div>
+    @if(taskList.nonEmpty) {
+    <table id="task-list" class="w3-table w3-striped w3-border">
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>タイトル</th>
+            <th>説明</th>
+            <th>完了済み</th>
+            <th>登録日</th>
+        </tr>
+        @for(task <- taskList) {
+            @taskRow(task)
+        }
+    </table>
+    } else {
+    <p>登録されたメッセージはありません</p>
+    }
+}

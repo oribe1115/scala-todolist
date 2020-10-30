@@ -2,12 +2,13 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{AbstractController, ControllerComponents}
+import models.{Task, Tasks}
 
 /**
   * TodoListコントローラ
   */
 @Singleton
-class TodoListController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) extends AbstractController(cc) {
 
   /**
     * インデックスページを表示
@@ -27,6 +28,12 @@ class TodoListController @Inject()(cc: ControllerComponents) extends AbstractCon
   def helloToAny(name: String) =
     Action { implicit request =>
       Ok(views.html.index(s"Hello ${name}!"))
+    }
+
+  def list =
+    Action { request =>
+      val taskList = tasks.list
+      Ok(views.html.list(taskList))
     }
 
 }

@@ -2,6 +2,7 @@
 GET     /                           controllers.TodoListController.index
 GET     /hello                      controllers.TodoListController.helloWorld
 GET     /hello/:name                controllers.TodoListController.helloToAny(name: String)
+GET     /tasks                      controllers.TodoListController.list
 
 # Formapp
 ## Normal
