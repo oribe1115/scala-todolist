@@ -1,9 +1,13 @@
 val projectConfig =
-    com.typesafe.config.ConfigFactory.parseFile(new File("conf/application.conf"))
+  com.typesafe.config.ConfigFactory.parseFile(new File("conf/application.conf"))
 
 name := projectConfig.getString("app.name")
 version := projectConfig.getString("app.version")
 scalaVersion := "2.13.3"
+scalacOptions ++= Seq("-encoding", "UTF-8")
+
+javacOptions ++= Seq("-encoding", "UTF-8")
+javaOptions ++= Seq("--illegal-access", "deny")
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
@@ -11,9 +15,9 @@ val playSlickVersion = "4.0.2"
 libraryDependencies ++= Seq(
   guice,
   cacheApi,
-  "com.typesafe.play" %% "play-slick"            % playSlickVersion,
+  "com.typesafe.play" %% "play-slick" % playSlickVersion,
   "com.typesafe.play" %% "play-slick-evolutions" % playSlickVersion,
-  "com.h2database"    %  "h2"                    % "1.4.200"
+  "com.h2database" % "h2" % "1.4.200"
 )
 
 scalafmtOnCompile := true
