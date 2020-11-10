@@ -10,8 +10,7 @@ import scala.concurrent.Await
   * task テーブルへの Accessor
   */
 @Singleton
-class Tasks @Inject() (dbcp: DBConfigProvider)(implicit ec: ExecutionContext)
-    extends Dao(dbcp) {
+class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) extends Dao(dbcp) {
 
   import profile.api._
   import utility.Await
@@ -40,7 +39,7 @@ class Tasks @Inject() (dbcp: DBConfigProvider)(implicit ec: ExecutionContext)
     )
 
   def create(task: Task): Option[Int] = {
-    var taskName = task.name
+    var taskName    = task.name
     var description = task.description
     Await.result(
       db.run(
