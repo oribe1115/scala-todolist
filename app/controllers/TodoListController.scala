@@ -38,6 +38,6 @@ class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) exten
 
   def taskForm =
     Action { request =>
-      Ok(views.html.taskForm())
+      Ok(views.html.taskForm(request))
     }
 }
