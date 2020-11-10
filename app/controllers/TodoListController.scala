@@ -36,6 +36,14 @@ class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) exten
       Ok(views.html.list(taskList))
     }
 
+  def taskDetail(id: Int) =
+    Action {
+      tasks.findByID(id) match {
+        case Some(t) => Ok(views.html.taskdetail(t))
+        case None    => NotFound(s"No task for id=${id}")
+      }
+    }
+
   def taskForm =
     Action { request =>
       Ok(views.html.taskForm(request))
@@ -54,4 +62,5 @@ class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) exten
         }
       ).getOrElse[Result](Redirect("/tasks"))
     }
+
 }

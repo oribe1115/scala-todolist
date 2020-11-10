@@ -1,0 +1,27 @@
+@(task: models.Task)
+
+@views.html.formapp.main("タスク詳細") {
+    <table class="w3-table">
+        <tr>
+            <th>ID</th>
+            <td>@task.id</td>
+        </tr>
+        <tr>
+            <th>タスク名</th>
+            <td>@task.name</td>
+        </tr>
+        <tr>
+            <th>説明</th>
+            <td>@task.description</td>
+        </tr>
+        <tr>
+            <th>完了済み</th>
+            <td>@task.isDone</td>
+        </tr>
+        <tr>
+            <th>登録日</th>
+            <td>@task.createdAt</td>
+        </tr>
+    </table>
+    <a href="/tasks">タスク一覧</a>
+}

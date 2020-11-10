@@ -29,6 +29,15 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
       )
     )
 
+  def findByID(id: Int): Option[Task] =
+    Await.result(
+      db.run(
+        sql"SELECT id, name, description, is_done, created_at FROM #$table WHERE id=#$id"
+          .as[Task]
+          .headOption
+      )
+    )
+
   def save(task: Task): Int = {
     var taskName    = task.name
     var description = task.description

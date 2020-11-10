@@ -3,6 +3,7 @@ GET     /                           controllers.TodoListController.index
 GET     /hello                      controllers.TodoListController.helloWorld
 GET     /hello/:name                controllers.TodoListController.helloToAny(name: String)
 GET     /tasks                      controllers.TodoListController.list
+GET     /tasks/:id                  controllers.TodoListController.taskDetail(id: Int)
 GET     /tasks/new                  controllers.TodoListController.taskForm
 
 POST    /register/tasks/new         controllers.TodoListController.registerNewTask
