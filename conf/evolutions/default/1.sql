@@ -11,9 +11,9 @@ CREATE TABLE enquete (
 
 CREATE TABLE task (
     id int PRIMARY KEY AUTO_INCREMENT,
-    title varchar(32) NOT NULL,
+    name varchar(32) NOT NULL,
     description varchar(255),
-    is_done boolean default 0 NOT NULL,
+    is_done boolean default FALSE NOT NULL,
     created_at timestamp default CURRENT_TIMESTAMP NOT NULL
 );
 

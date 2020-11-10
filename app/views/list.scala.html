@@ -5,7 +5,7 @@
 @taskRow(task: models.Task) = {
     <tr id="@task.id">
         <td class="id">@task.id</td>
-        <td class="title">@task.title</td>
+        <td class="taskName">@task.name</td>
         <td class="description">@task.description</td>
         <td class="isDone">@task.isDone</td>
         <td class="date">@task.createdAt</td>
@@ -23,7 +23,7 @@
         <tr>
             <th></th>
             <th>ID</th>
-            <th>タイトル</th>
+            <th>タスク名</th>
             <th>説明</th>
             <th>完了済み</th>
             <th>登録日</th>

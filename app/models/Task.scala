@@ -5,14 +5,14 @@ import java.sql.Timestamp
 /**
   * Domain model of task
   * @param id          ID
-  * @param title       タスク名
+  * @param name        タスク名
   * @param description タスクの説明
   * @param isDone      完了状態
   * @param createdAt   作成日時
   */
 case class Task(
     id: Int,
-    title: String,
+    name: String,
     description: String,
     isDone: Boolean,
     createdAt: Timestamp
@@ -32,6 +32,6 @@ object Task extends DomainModel[Task] {
         )
     )
 
-  def apply(title: String, description: String, isDone: Boolean): Task =
-    Task(0, title, description, isDone, null)
+  def apply(name: String, description: String, isDone: Boolean): Task =
+    Task(0, name, description, isDone, null)
 }

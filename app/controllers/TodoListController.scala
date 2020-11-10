@@ -46,7 +46,7 @@ class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) exten
       (
         for {
           param       <- request.body.asFormUrlEncoded
-          taskName    <- param.get("title").flatMap(_.headOption)
+          taskName    <- param.get("taskName").flatMap(_.headOption)
           description <- param.get("description").flatMap(_.headOption)
         } yield {
           tasks.save(Task(taskName, description, false))

@@ -24,17 +24,17 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
   def list: Seq[Task] =
     Await.result(
       db.run(
-        sql"SELECT id, title, description, is_done, created_at FROM #$table"
+        sql"SELECT id, name, description, is_done, created_at FROM #$table"
           .as[Task]
       )
     )
 
   def save(task: Task): Int = {
-    var taskName    = task.title
+    var taskName    = task.name
     var description = task.description
     Await.result(
       db.run(
-        sqlu"INSERT INTO #$table (title, description) VALUES ('#$taskName', '#$description')"
+        sqlu"INSERT INTO #$table (name, description) VALUES ('#$taskName', '#$description')"
       )
     )
   }
