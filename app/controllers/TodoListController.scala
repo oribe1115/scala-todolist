@@ -8,7 +8,8 @@ import models.{Task, Tasks}
   * TodoListコントローラ
   */
 @Singleton
-class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) extends AbstractController(cc) {
+class TodoListController @Inject() (tasks: Tasks)(cc: ControllerComponents)
+    extends AbstractController(cc) {
 
   /**
     * インデックスページを表示
@@ -53,14 +54,16 @@ class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) exten
     Action { request =>
       (
         for {
-          param       <- request.body.asFormUrlEncoded
-          taskName    <- param.get("taskName").flatMap(_.headOption)
+          param <- request.body.asFormUrlEncoded
+          taskName <- param.get("taskName").flatMap(_.headOption)
           description <- param.get("description").flatMap(_.headOption)
         } yield {
-          tasks.save(Task(taskName, description, false))
-          Redirect("/tasks")
+          tasks.create(Task(taskName, description, false)) match {
+            case Some(id) => Redirect(s"/tasks/$id")
+            case None     => InternalServerError(s"faild to add task")
+          }
         }
-      ).getOrElse[Result](Redirect("/tasks"))
+      ).getOrElse[Result](BadRequest(s"bad request for add task"))
     }
 
 }

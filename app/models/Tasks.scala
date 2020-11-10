@@ -10,7 +10,8 @@ import scala.concurrent.Await
   * task テーブルへの Accessor
   */
 @Singleton
-class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) extends Dao(dbcp) {
+class Tasks @Inject() (dbcp: DBConfigProvider)(implicit ec: ExecutionContext)
+    extends Dao(dbcp) {
 
   import profile.api._
   import utility.Await
@@ -38,12 +39,17 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
       )
     )
 
-  def save(task: Task): Int = {
-    var taskName    = task.name
+  def create(task: Task): Option[Int] = {
+    var taskName = task.name
     var description = task.description
     Await.result(
       db.run(
         sqlu"INSERT INTO #$table (name, description) VALUES ('#$taskName', '#$description')"
+      )
+    )
+    Await.result(
+      db.run(
+        sql"SELECT LAST_INSERT_ID() FROM #$table".as[Int].headOption
       )
     )
   }
