@@ -4,6 +4,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 import play.api.db.slick.{DatabaseConfigProvider => DBConfigProvider}
+import scala.concurrent.Await
 
 /**
   * task テーブルへの Accessor
@@ -20,8 +21,22 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
     * DB上に保存されている全てのタスクを取得する
     * @return
     */
-  def list: Seq[Task] = Await.result(
-    db.run(sql"SELECT id, title, description, is_done, created_at FROM #$table".as[Task])
-  )
+  def list: Seq[Task] =
+    Await.result(
+      db.run(
+        sql"SELECT id, title, description, is_done, created_at FROM #$table"
+          .as[Task]
+      )
+    )
+
+  def save(task: Task): Int = {
+    var taskName    = task.title
+    var description = task.description
+    Await.result(
+      db.run(
+        sqlu"INSERT INTO #$table (title, description) VALUES ('#$taskName', '#$description')"
+      )
+    )
+  }
 
 }

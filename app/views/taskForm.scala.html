@@ -4,7 +4,7 @@
 
 @views.html.main("") {
     <h3>タスク追加</h3>
-    <form action="/task/new" method="POST">
+    <form action="/register/tasks/new" method="POST">
         @CSRF.formField
         <input type="text" name="title">
         <textarea name="description"></textarea>

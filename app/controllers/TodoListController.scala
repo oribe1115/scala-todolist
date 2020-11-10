@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.mvc.{AbstractController, ControllerComponents, Result}
 import models.{Task, Tasks}
 
 /**
@@ -39,5 +39,19 @@ class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) exten
   def taskForm =
     Action { request =>
       Ok(views.html.taskForm(request))
+    }
+
+  def registerNewTask =
+    Action { request =>
+      (
+        for {
+          param       <- request.body.asFormUrlEncoded
+          taskName    <- param.get("title").flatMap(_.headOption)
+          description <- param.get("description").flatMap(_.headOption)
+        } yield {
+          tasks.save(Task(taskName, description, false))
+          Redirect("/tasks")
+        }
+      ).getOrElse[Result](Redirect("/tasks"))
     }
 }

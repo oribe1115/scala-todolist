@@ -4,7 +4,8 @@ GET     /hello                      controllers.TodoListController.helloWorld
 GET     /hello/:name                controllers.TodoListController.helloToAny(name: String)
 GET     /tasks                      controllers.TodoListController.list
 GET     /tasks/new                  controllers.TodoListController.taskForm
-POST    /tasks/new                  controllers.Default.TODO
+
+POST    /register/tasks/new         controllers.TodoListController.registerNewTask
 
 # Formapp
 ## Normal
