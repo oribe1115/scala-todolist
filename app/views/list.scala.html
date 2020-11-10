@@ -4,11 +4,9 @@
 
 @taskRow(task: models.Task) = {
     <tr id="@task.id">
-        <td class="id">@task.id</td>
+        <td class="id"><a href="/tasks/@task.id">@task.id</a></td>
         <td class="taskName">@task.name</td>
-        <td class="description">@task.description</td>
         <td class="isDone">@task.isDone</td>
-        <td class="date">@task.createdAt</td>
     </tr>
 }
 
@@ -19,14 +17,12 @@
         </div>
     </div>
     @if(taskList.nonEmpty) {
-    <table id="task-list" class="w3-table w3-striped w3-border">
+    <table id="task-list">
         <tr>
             <th></th>
             <th>ID</th>
             <th>タスク名</th>
-            <th>説明</th>
             <th>完了済み</th>
-            <th>登録日</th>
         </tr>
         @for(task <- taskList) {
             @taskRow(task)
