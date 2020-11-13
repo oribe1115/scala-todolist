@@ -10,6 +10,7 @@ GET     /tasks/:id/edit             controllers.TodoListController.taskEdit(id: 
 POST    /register/tasks/new         controllers.TodoListController.registerNewTask
 #PUT     /register/tasks/:id         controllers.TodoListController.registerUpdateTask(id: Int)
 POST    /register/tasks/:id/edit    controllers.TodoListController.registerUpdateTask(id: Int)
+POST    /register/tasks/:id/delete  controllers.TodoListController.registerDeleteTask(id: Int)
 
 # Formapp
 ## Normal

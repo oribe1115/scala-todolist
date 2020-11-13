@@ -95,4 +95,19 @@ class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) exten
       ).getOrElse[Result](BadRequest(s"bad request for update task"))
     }
 
+  def registerDeleteTask(id: Int) =
+    Action { request =>
+      (
+        tasks.findByID(id) match {
+          case Some(t) => {
+            tasks.delete(t) match {
+              case 1 => Redirect(s"/tasks")
+              case _ => InternalServerError(s"faild to delete task")
+            }
+          }
+          case None => BadRequest(s"bad request for delete task")
+        }
+      )
+    }
+
 }
