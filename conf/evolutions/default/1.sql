@@ -14,7 +14,8 @@ CREATE TABLE task (
     name varchar(32) NOT NULL,
     description varchar(255),
     is_done boolean default FALSE NOT NULL,
-    created_at timestamp default CURRENT_TIMESTAMP NOT NULL
+    created_at timestamp default CURRENT_TIMESTAMP() NOT NULL,
+    updated_at timestamp default CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP() NOT NULL
 );
 
 # --- !Downs

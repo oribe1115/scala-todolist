@@ -24,7 +24,7 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
   def list: Seq[Task] =
     Await.result(
       db.run(
-        sql"SELECT id, name, description, is_done, created_at FROM #$table"
+        sql"SELECT id, name, description, is_done, created_at,　updated_at FROM #$table"
           .as[Task]
       )
     )
@@ -32,7 +32,7 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
   def findByID(id: Int): Option[Task] =
     Await.result(
       db.run(
-        sql"SELECT id, name, description, is_done, created_at FROM #$table WHERE id=#$id"
+        sql"SELECT id, name, description, is_done, created_at, updated_at FROM #$table WHERE id=#$id"
           .as[Task]
           .headOption
       )
@@ -55,7 +55,7 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
 
   def update(task: Task): Int =
     task match {
-      case Task(id, name, description, isDone, _) =>
+      case Task(id, name, description, isDone, _, _) =>
         Await.result(
           db.run(
             sqlu"UPDATE #$table SET name='#$name', description='#$description', is_done=#$isDone WHERE id = #$id"
@@ -65,7 +65,7 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
 
   def delete(task: Task): Int =
     task match {
-      case Task(id, _, _, _, _) =>
+      case Task(id, _, _, _, _, _) =>
         Await.result(
           db.run(
             sqlu"DELETE FROM #$table WHERE id = #$id"
