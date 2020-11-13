@@ -77,4 +77,22 @@ class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) exten
       ).getOrElse[Result](BadRequest(s"bad request for add task"))
     }
 
+  def registerUpdateTask(id: Int) =
+    Action { request =>
+      (
+        for {
+          param       <- request.body.asFormUrlEncoded
+          taskName    <- param.get("taskName").flatMap(_.headOption)
+          description <- param.get("description").flatMap(_.headOption)
+          isDoneStr   <- param.get("isDone").flatMap(_.headOption)
+        } yield {
+          var isDone = if (isDoneStr == "on") true else false
+          tasks.update(Task(id, taskName, description, isDone)) match {
+            case 1 => Redirect(s"/tasks/$id")
+            case _ => InternalServerError(s"faild to update task")
+          }
+        }
+      ).getOrElse[Result](BadRequest(s"bad request for update task"))
+    }
+
 }

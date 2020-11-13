@@ -34,4 +34,7 @@ object Task extends DomainModel[Task] {
 
   def apply(name: String, description: String, isDone: Boolean): Task =
     Task(0, name, description, isDone, null)
+
+  def apply(id: Int, name: String, description: String, isDone: Boolean): Task =
+    Task(id, name, description, isDone, null)
 }

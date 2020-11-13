@@ -53,4 +53,14 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
     )
   }
 
+  def update(task: Task): Int =
+    task match {
+      case Task(id, name, description, isDone, _) =>
+        Await.result(
+          db.run(
+            sqlu"UPDATE #$table SET name='#$name', description='#$description', is_done=#$isDone WHERE id = #$id"
+          )
+        )
+    }
+
 }

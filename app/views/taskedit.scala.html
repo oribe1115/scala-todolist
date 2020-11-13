@@ -4,11 +4,12 @@
 
 @views.html.main("") {
     <h3>タスク編集</h3>
-    <form action="/register/tasks/@task.id" method="PUT">
+    <form action="/register/tasks/@task.id/edit" method="POST">
         @CSRF.formField
         <input type="text" name="taskName" value="@task.name">
         <textarea name="description">@task.description</textarea>
         <input type="checkbox" name="isDone" @if(task.isDone){checked}>
+        <input type="hidden" name="isDone" value="off">
         <input type="submit" value="update">
     </form>
 }
