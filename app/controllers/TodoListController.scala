@@ -37,16 +37,28 @@ class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) exten
     }
 
   def taskDetail(id: Int) =
-    Action {
-      tasks.findByID(id) match {
-        case Some(t) => Ok(views.html.taskdetail(t))
-        case None    => NotFound(s"No task for id=${id}")
+    Action { request =>
+      {
+        tasks.findByID(id) match {
+          case Some(t) => Ok(views.html.taskdetail(t))
+          case None    => NotFound(s"No task for id=${id}")
+        }
       }
     }
 
   def taskForm =
     Action { request =>
       Ok(views.html.taskForm(request))
+    }
+
+  def taskEdit(id: Int) =
+    Action { request =>
+      {
+        tasks.findByID(id) match {
+          case Some(t) => Ok(views.html.taskedit(t)(request))
+          case None    => NotFound(s"No task for id=${id}")
+        }
+      }
     }
 
   def registerNewTask =
