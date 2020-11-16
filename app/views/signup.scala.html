@@ -1,0 +1,13 @@
+@(implicit request: RequestHeader)
+
+@import helper._
+
+@views.html.main("") {
+    <h3>signup</h3>
+    <form action="/register/signup" method="POST">
+        @CSRF.formField
+        <input type="text" name="username">
+        <input type="text" name="password">
+        <input type="submit" value="submit">
+    </form>
+}

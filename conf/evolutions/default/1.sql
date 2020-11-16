@@ -18,6 +18,14 @@ CREATE TABLE task (
     updated_at timestamp default CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP() NOT NULL
 );
 
+CREATE TABLE user (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(32) NOT NULL,
+    password varchar(32) NOT NULL,
+    created_at timestamp default CURRENT_TIMESTAMP() NOT NULL,
+    updated_at timestamp default CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP() NOT NULL
+);
+
 # --- !Downs
 DROP TABLE enquete;
 

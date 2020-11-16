@@ -13,7 +13,8 @@ case class User(
     id: Int,
     name: String,
     password: String,
-    createdAt: Timestamp
+    createdAt: Timestamp,
+    updatedAt: Timestamp
 )
 
 object User extends DomainModel[User] {
@@ -25,10 +26,11 @@ object User extends DomainModel[User] {
           r.nextInt,
           r.nextString,
           r.nextString,
+          r.nextTimestamp,
           r.nextTimestamp
         )
     )
 
   def apply(name: String, password: String): User =
-    User(0, name, password, null)
+    User(0, name, password, null, null)
 }

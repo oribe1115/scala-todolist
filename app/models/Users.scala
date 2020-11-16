@@ -23,7 +23,7 @@ class Users @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
   def list: Seq[User] =
     Await.result(
       db.run(
-        sql"SELECT id, name, password, created_at FROM #$table"
+        sql"SELECT id, name, password, created_at, updated_at FROM #$table"
           .as[User]
       )
     )
@@ -31,7 +31,7 @@ class Users @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
   def findByID(id: Int): Option[User] =
     Await.result(
       db.run(
-        sql"SELECT id, name, password, created_at FROM #$table WHERE id=#$id"
+        sql"SELECT id, name, password, created_at, updated_at FROM #$table WHERE id=#$id"
           .as[User]
           .headOption
       )

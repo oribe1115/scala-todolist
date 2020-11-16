@@ -2,13 +2,16 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{AbstractController, ControllerComponents, Result}
-import models.{Task, Tasks}
+import models.{Task, Tasks, User, Users}
+import utility.Digest
 
 /**
   * TodoListコントローラ
   */
 @Singleton
-class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) extends AbstractController(cc) {
+class TodoListController @Inject()(tasks: Tasks)(users: Users)(
+    cc: ControllerComponents
+) extends AbstractController(cc) {
 
   /**
     * インデックスページを表示
@@ -36,6 +39,11 @@ class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) exten
       Ok(views.html.list(taskList))
     }
 
+  def signup =
+    Action { request =>
+      Ok(views.html.signup(request))
+    }
+
   def taskDetail(id: Int) =
     Action { request =>
       {
@@ -59,6 +67,21 @@ class TodoListController @Inject()(tasks: Tasks)(cc: ControllerComponents) exten
           case None    => NotFound(s"No task for id=${id}")
         }
       }
+    }
+
+  def registerSignup =
+    Action { request =>
+      (
+        for {
+          param    <- request.body.asFormUrlEncoded
+          username <- param.get("username").flatMap(_.headOption)
+          password <- param.get("password").flatMap(_.headOption)
+        } yield {
+          var hashedPassword = Digest(password)
+          println(hashedPassword)
+          Ok("ok")
+        }
+      ).getOrElse[Result](BadRequest(s"bad request for singup"))
     }
 
   def registerNewTask =
