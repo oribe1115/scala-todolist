@@ -40,18 +40,19 @@ class Users @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
   def findByName(name: String): Option[User] =
     Await.result(
       db.run(
-        sql"SELECT id, name, password, created_at, updated_at FROM #$table WHERE name=#$name"
+        sql"SELECT id, name, password, created_at, updated_at FROM #$table WHERE name='#$name'"
           .as[User]
           .headOption
       )
     )
 
-  def countByName(name: String): Int =
+  def countByName(name: String): Option[Int] =
     Await
       .result(
         db.run(
-          sql"SELECT COUNT(*) FROM #$table WHERE name=#$name"
-            .getInt(1)
+          sql"SELECT COUNT(*) FROM #$table WHERE name='#$name'"
+            .as[Int]
+            .headOption
         )
       )
 

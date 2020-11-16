@@ -79,7 +79,7 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
         } yield {
           var hashedPassword = Digest(password)
           users.countByName(username) match {
-            case 0 => {
+            case Some(0) => {
               users.create(User(username, password)) match {
                 case Some(id) => Ok("ok")
                 case None     => InternalServerError("faild to signup")
