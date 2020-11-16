@@ -21,7 +21,7 @@ CREATE TABLE task (
 CREATE TABLE user (
     id int PRIMARY KEY AUTO_INCREMENT,
     name varchar(32) NOT NULL,
-    password varchar(32) NOT NULL,
+    password varchar(86) NOT NULL,
     created_at timestamp default CURRENT_TIMESTAMP() NOT NULL,
     updated_at timestamp default CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP() NOT NULL
 );

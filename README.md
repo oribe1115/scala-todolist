@@ -46,3 +46,10 @@ Frameworkを用いた小規模Webアプリケーションの開発
 
 #### その他
 - [S-2.10] 独自機能を追加．
+
+
+---
+
+初期ユーザー
+username: `user1`
+password: `password`
