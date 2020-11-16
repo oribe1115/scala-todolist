@@ -37,11 +37,37 @@ class Users @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
       )
     )
 
-  def create(user: User) =
+  def findByName(name: String): Option[User] =
     Await.result(
       db.run(
-        sqlu"INSERT INTO #$table (name, password) VALUES ('#$user.name', '#$user.password')"
+        sql"SELECT id, name, password, created_at, updated_at FROM #$table WHERE name=#$name"
+          .as[User]
+          .headOption
       )
     )
+
+  def countByName(name: String): Int =
+    Await
+      .result(
+        db.run(
+          sql"SELECT COUNT(*) FROM #$table WHERE name=#$name"
+            .getInt(1)
+        )
+      )
+
+  def create(user: User): Option[Int] = {
+    var name     = user.name
+    var password = user.password
+    Await.result(
+      db.run(
+        sqlu"INSERT INTO #$table (name, password) VALUES ('#$name', '#$password')"
+      )
+    )
+    Await.result(
+      db.run(
+        sql"SELECT LAST_INSERT_ID() FROM #$table".as[Int].headOption
+      )
+    )
+  }
 
 }

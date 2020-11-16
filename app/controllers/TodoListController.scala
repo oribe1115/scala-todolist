@@ -78,8 +78,15 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
           password <- param.get("password").flatMap(_.headOption)
         } yield {
           var hashedPassword = Digest(password)
-          println(hashedPassword)
-          Ok("ok")
+          users.countByName(username) match {
+            case 0 => {
+              users.create(User(username, password)) match {
+                case Some(id) => Ok("ok")
+                case None     => InternalServerError("faild to signup")
+              }
+            }
+            case _ => BadRequest("this username has already used")
+          }
         }
       ).getOrElse[Result](BadRequest(s"bad request for singup"))
     }
