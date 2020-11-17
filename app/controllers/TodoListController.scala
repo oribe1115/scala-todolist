@@ -58,8 +58,7 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
       (for {
         userIDStr <- request.session.get("todolist::userID")
       } yield {
-        val userID = userIDStr.toInt
-        isMyTask(userID, taskID) match {
+        isMyTask(userIDStr.toInt, taskID) match {
           case true =>
             tasks.findByID(taskID) match {
               case Some(t) => Ok(views.html.taskdetail(t))
@@ -75,14 +74,20 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
       Ok(views.html.taskForm(request))
     }
 
-  def taskEdit(id: Int) =
+  def taskEdit(taskID: Int) =
     Action { request =>
-      {
-        tasks.findByID(id) match {
-          case Some(t) => Ok(views.html.taskedit(t)(request))
-          case None    => NotFound(s"No task for id=${id}")
+      (for {
+        userIDStr <- request.session.get("todolist::userID")
+      } yield {
+        isMyTask(userIDStr.toInt, taskID) match {
+          case true =>
+            tasks.findByID(taskID) match {
+              case Some(t) => Ok(views.html.taskedit(t)(request))
+              case None    => NotFound(s"No task for id=${taskID}")
+            }
+          case false => NotFound(s"No task for id=${taskID}")
         }
-      }
+      }).getOrElse[Result](Redirect("/"))
     }
 
   def registerSignup =
@@ -149,37 +154,50 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
       ).getOrElse[Result](BadRequest(s"bad request for add task"))
     }
 
-  def registerUpdateTask(id: Int) =
+  def registerUpdateTask(taskID: Int) =
     Action { request =>
       (
         for {
+          userIDStr   <- request.session.get("todolist::userID")
           param       <- request.body.asFormUrlEncoded
           taskName    <- param.get("taskName").flatMap(_.headOption)
           description <- param.get("description").flatMap(_.headOption)
           isDoneStr   <- param.get("isDone").flatMap(_.headOption)
         } yield {
           var isDone = if (isDoneStr == "on") true else false
-          tasks.update(Task(id, taskName, description, isDone)) match {
-            case 1 => Redirect(s"/tasks/$id")
-            case _ => InternalServerError(s"faild to update task")
+          isMyTask(userIDStr.toInt, taskID) match {
+            case true =>
+              tasks.update(Task(taskID, taskName, description, isDone)) match {
+                case 1 => Redirect(s"/tasks/$taskID")
+                case _ => InternalServerError("faild to update task")
+              }
+            case false => BadRequest(s"bad request for update task")
           }
         }
       ).getOrElse[Result](BadRequest(s"bad request for update task"))
     }
 
-  def registerDeleteTask(id: Int) =
+  def registerDeleteTask(taskID: Int) =
     Action { request =>
       (
-        tasks.findByID(id) match {
-          case Some(t) => {
-            tasks.delete(t) match {
-              case 1 => Redirect(s"/tasks")
-              case _ => InternalServerError(s"faild to delete task")
-            }
+        for {
+          userIDStr <- request.session.get("todolist::userID")
+        } yield {
+          isMyTask(userIDStr.toInt, taskID) match {
+            case true =>
+              tasks.findByID(taskID) match {
+                case Some(t) => {
+                  tasks.delete(t) match {
+                    case 1 => Redirect("/tasks")
+                    case _ => InternalServerError("faild to delete task")
+                  }
+                }
+                case None => BadRequest("bad request for delete task")
+              }
+            case false => BadRequest("bad request for delete task")
           }
-          case None => BadRequest(s"bad request for delete task")
         }
-      )
+      ).getOrElse[Result](BadRequest("bad request for dekete task"))
     }
 
   def isMyTask(userID: Int, taskID: Int): Boolean = {
