@@ -47,12 +47,17 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
       )
     )
 
-  def create(task: Task): Option[Int] = {
+  def create(task: Task, userID: Int): Option[Int] = {
     var taskName    = task.name
     var description = task.description
     Await.result(
       db.run(
         sqlu"INSERT INTO #$table (name, description) VALUES ('#$taskName', '#$description')"
+      )
+    )
+    Await.result(
+      db.run(
+        sqlu"INSERT INTO #$userTaskTable (user_id, task_id) VALUES ('#$userID', LAST_INSERT_ID())"
       )
     )
     Await.result(

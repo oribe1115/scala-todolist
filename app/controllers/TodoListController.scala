@@ -142,16 +142,20 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
     Action { request =>
       (
         for {
+          userIDStr   <- request.session.get("todolist::userID")
           param       <- request.body.asFormUrlEncoded
           taskName    <- param.get("taskName").flatMap(_.headOption)
           description <- param.get("description").flatMap(_.headOption)
         } yield {
-          tasks.create(Task(taskName, description, false)) match {
-            case Some(id) => Redirect(s"/tasks/$id")
-            case None     => InternalServerError(s"faild to add task")
+          tasks.create(
+            Task(taskName, description, false),
+            userIDStr.toInt
+          ) match {
+            case Some(taskID) => Redirect(s"/tasks/$taskID")
+            case None         => InternalServerError(s"faild to add task")
           }
         }
-      ).getOrElse[Result](BadRequest(s"bad request for add task"))
+      ).getOrElse[Result](BadRequest(s"bad request for update task"))
     }
 
   def registerUpdateTask(taskID: Int) =
