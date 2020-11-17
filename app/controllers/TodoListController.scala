@@ -44,6 +44,11 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
       Ok(views.html.signup(request))
     }
 
+  def login =
+    Action { request =>
+      Ok(views.html.login(request))
+    }
+
   def taskDetail(id: Int) =
     Action { request =>
       {
@@ -89,6 +94,26 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
           }
         }
       ).getOrElse[Result](BadRequest(s"bad request for singup"))
+    }
+
+  def registerLogin =
+    Action { request =>
+      (
+        for {
+          param    <- request.body.asFormUrlEncoded
+          username <- param.get("username").flatMap(_.headOption)
+          password <- param.get("password").flatMap(_.headOption)
+        } yield {
+          var hashedPassword = Digest(password)
+          users.findByName(username) match {
+            case Some(user) => {
+              if (hashedPassword == user.password) Ok("ok")
+              else BadRequest("password is wrong")
+            }
+            case _ => BadRequest("user not found")
+          }
+        }
+      ).getOrElse[Result](BadRequest(s"bad request for login"))
     }
 
   def registerNewTask =
