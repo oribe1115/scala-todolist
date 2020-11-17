@@ -15,7 +15,8 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
   import profile.api._
   import utility.Await
 
-  val table = "task"
+  val table         = "task"
+  val userTaskTable = "user_task"
 
   /**
     * DB上に保存されている全てのタスクを取得する
@@ -25,6 +26,14 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
     Await.result(
       db.run(
         sql"SELECT id, name, description, is_done, created_at,　updated_at FROM #$table"
+          .as[Task]
+      )
+    )
+
+  def listByUserID(userID: Int): Seq[Task] =
+    Await.result(
+      db.run(
+        sql"SELECT id, name, description, is_done, created_at,　updated_at FROM #$table IN WHERE id IN (SELECT task_id FROM #$userTaskTable WHERE user_id=#$userID)"
           .as[Task]
       )
     )

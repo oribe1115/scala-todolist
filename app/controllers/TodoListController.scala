@@ -34,9 +34,13 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
     }
 
   def list =
-    Action { implicit request =>
-      val taskList = tasks.list
-      Ok(views.html.list(taskList))
+    Action { request =>
+      (for {
+        idStr <- request.session.get("todolist::userID")
+      } yield {
+        val taskList = tasks.listByUserID(idStr.toInt)
+        Ok(views.html.list(taskList)).withSession(request.session)
+      }).getOrElse[Result](Redirect("/"))
     }
 
   def signup =
@@ -86,8 +90,11 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
           users.countByName(username) match {
             case Some(0) => {
               users.create(User(username, password)) match {
-                case Some(id) => Ok("ok")
-                case None     => InternalServerError("faild to signup")
+                case Some(id) =>
+                  Redirect("/tasks").withSession(
+                    "todolist::userID" -> id.toString
+                  )
+                case None => InternalServerError("faild to signup")
               }
             }
             case _ => BadRequest("this username has already used")
@@ -107,7 +114,10 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
           var hashedPassword = Digest(password)
           users.findByName(username) match {
             case Some(user) => {
-              if (hashedPassword == user.password) Ok("ok")
+              if (hashedPassword == user.password)
+                Redirect("/tasks").withSession(
+                  "todolist::userID" -> user.id.toString
+                )
               else BadRequest("password is wrong")
             }
             case _ => BadRequest("user not found")
