@@ -82,4 +82,14 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
         )
     }
 
+  def countByUserTask(userID: Int, taskID: Int): Option[Int] =
+    Await
+      .result(
+        db.run(
+          sql"SELECT COUNT(*) FROM #$userTaskTable WHERE user_id=#$userID AND task_id=#$taskID"
+            .as[Int]
+            .headOption
+        )
+      )
+
 }

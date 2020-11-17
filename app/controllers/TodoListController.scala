@@ -36,10 +36,10 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
   def list =
     Action { request =>
       (for {
-        idStr <- request.session.get("todolist::userID")
+        userIDStr <- request.session.get("todolist::userID")
       } yield {
-        val taskList = tasks.listByUserID(idStr.toInt)
-        Ok(views.html.list(taskList)).withSession(request.session)
+        val taskList = tasks.listByUserID(userIDStr.toInt)
+        Ok(views.html.list(taskList))
       }).getOrElse[Result](Redirect("/"))
     }
 
@@ -53,14 +53,21 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
       Ok(views.html.login(request))
     }
 
-  def taskDetail(id: Int) =
+  def taskDetail(taskID: Int) =
     Action { request =>
-      {
-        tasks.findByID(id) match {
-          case Some(t) => Ok(views.html.taskdetail(t))
-          case None    => NotFound(s"No task for id=${id}")
+      (for {
+        userIDStr <- request.session.get("todolist::userID")
+      } yield {
+        val userID = userIDStr.toInt
+        isMyTask(userID, taskID) match {
+          case true =>
+            tasks.findByID(taskID) match {
+              case Some(t) => Ok(views.html.taskdetail(t))
+              case None    => NotFound(s"No task for id=${taskID}")
+            }
+          case false => NotFound(s"No task for id=${taskID}")
         }
-      }
+      }).getOrElse[Result](Redirect("/"))
     }
 
   def taskForm =
@@ -174,5 +181,12 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
         }
       )
     }
+
+  def isMyTask(userID: Int, taskID: Int): Boolean = {
+    tasks.countByUserTask(userID, taskID) match {
+      case Some(1) => true
+      case _       => false
+    }
+  }
 
 }
