@@ -38,7 +38,7 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
       (for {
         userIDStr <- request.session.get("todolist::userID")
       } yield {
-        val taskList = tasks.listByUserID(userIDStr.toInt)
+        val taskList = tasks.listByUserIDWithoutFinish(userIDStr.toInt)
         Ok(views.html.list(taskList))
       }).getOrElse[Result](Redirect("/"))
     }

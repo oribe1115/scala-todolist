@@ -33,7 +33,15 @@ class Tasks @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
   def listByUserID(userID: Int): Seq[Task] =
     Await.result(
       db.run(
-        sql"SELECT id, name, description, is_done, created_at,　updated_at FROM #$table IN WHERE id IN (SELECT task_id FROM #$userTaskTable WHERE user_id=#$userID)"
+        sql"SELECT id, name, description, is_done, created_at,　updated_at FROM #$table WHERE id IN (SELECT task_id FROM #$userTaskTable WHERE user_id=#$userID)"
+          .as[Task]
+      )
+    )
+
+  def listByUserIDWithoutFinish(userID: Int): Seq[Task] =
+    Await.result(
+      db.run(
+        sql"SELECT id, name, description, is_done, created_at,　updated_at FROM #$table WHERE id IN (SELECT task_id FROM #$userTaskTable WHERE user_id=#$userID) AND is_done != TRUE"
           .as[Task]
       )
     )
