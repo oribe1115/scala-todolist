@@ -1,0 +1,17 @@
+@(user: models.User)(implicit request: RequestHeader)
+
+@import helper._
+
+@views.html.main("") {
+    <h3>ユーザー情報</h3>
+        <p>@user.name</p>
+        <p>@user.createdAt</p>
+        <p>@user.updatedAt</p>
+    <h3>パスワード変更</h3>
+    <form action="/register/user/password" method="POST">
+        @CSRF.formField
+        <input type="text" name="oldPassword" >
+        <input type="text" name="newPassword" >
+        <input type="submit" value="update">
+    </form>
+}

@@ -53,6 +53,18 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
       Ok(views.html.login(request))
     }
 
+  def mypage =
+    Action { request =>
+      (for {
+        userIDStr <- request.session.get("todolist::userID")
+      } yield {
+        users.findByID(userIDStr.toInt) match {
+          case Some(user) => Ok(views.html.mypage(user)(request))
+          case _          => InternalServerError("faild to get mypage")
+        }
+      }).getOrElse[Result](Redirect("/"))
+    }
+
   def taskDetail(taskID: Int) =
     Action { request =>
       (for {
@@ -136,6 +148,35 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
           }
         }
       ).getOrElse[Result](BadRequest(s"bad request for login"))
+    }
+
+  def registerPasswordUpdate =
+    Action { request =>
+      (
+        for {
+          userIDStr   <- request.session.get("todolist::userID")
+          param       <- request.body.asFormUrlEncoded
+          oldPassword <- param.get("oldPassword").flatMap(_.headOption)
+          newPassword <- param.get("newPassword").flatMap(_.headOption)
+        } yield {
+          val userID            = userIDStr.toInt
+          val oldHashedPassword = Digest(oldPassword)
+          val newHashedPassword = Digest(newPassword)
+          users.findByID(userID) match {
+            case Some(user) => {
+              if (oldHashedPassword == user.password) {
+                users.updatePassword(userID, newHashedPassword) match {
+                  case 1 => Ok("success to update")
+                  case _ => InternalServerError("faild to update")
+                }
+              } else {
+                BadRequest("password is wrong")
+              }
+            }
+            case _ => InternalServerError("faild to get userdata")
+          }
+        }
+      ).getOrElse[Result](BadRequest("bad request for password update"))
     }
 
   def registerNewTask =

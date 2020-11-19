@@ -71,4 +71,11 @@ class Users @Inject()(dbcp: DBConfigProvider)(implicit ec: ExecutionContext) ext
     )
   }
 
+  def updatePassword(id: Int, password: String): Int =
+    Await.result(
+      db.run(
+        sqlu"UPDATE #$table SET password='#$password' WHERE id=#$id"
+      )
+    )
+
 }
