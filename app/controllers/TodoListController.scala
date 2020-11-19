@@ -150,7 +150,7 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
       ).getOrElse[Result](BadRequest(s"bad request for login"))
     }
 
-  def registerPasswordUpdate =
+  def registerUpdatePassword =
     Action { request =>
       (
         for {
