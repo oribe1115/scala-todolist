@@ -14,4 +14,10 @@
         <input type="text" name="newPassword" >
         <input type="submit" value="update">
     </form>
+    <h3>退会</h3>
+    <form action="/register/user/delete" method="POST">
+        @CSRF.formField
+        <input type="text" name="password" >
+        <input type="submit" value="delete">
+    </form>
 }

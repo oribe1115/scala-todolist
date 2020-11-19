@@ -13,6 +13,7 @@ GET     /tasks/:id/edit             controllers.TodoListController.taskEdit(id: 
 POST    /register/signup            controllers.TodoListController.registerSignup
 POST    /register/login             controllers.TodoListController.registerLogin
 POST    /register/user/password     controllers.TodoListController.registerPasswordUpdate
+POST    /register/user/delete       controllers.TodoListController.regiseterDeleteUser
 POST    /register/tasks/new         controllers.TodoListController.registerNewTask
 #PUT     /register/tasks/:id         controllers.TodoListController.registerUpdateTask(id: Int)
 POST    /register/tasks/:id/edit    controllers.TodoListController.registerUpdateTask(id: Int)

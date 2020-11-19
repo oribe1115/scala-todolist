@@ -179,6 +179,33 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
       ).getOrElse[Result](BadRequest("bad request for password update"))
     }
 
+  def regiseterDeleteUser =
+    Action { request =>
+      (
+        for {
+          userIDStr <- request.session.get("todolist::userID")
+          param     <- request.body.asFormUrlEncoded
+          password  <- param.get("password").flatMap(_.headOption)
+        } yield {
+          val userID         = userIDStr.toInt
+          val hashedPassword = Digest(password)
+          users.findByID(userID) match {
+            case Some(user) => {
+              if (hashedPassword == user.password) {
+                users.delete(userID) match {
+                  case 1 => Ok("success to delete user").withNewSession
+                  case _ => InternalServerError("faild to delete user")
+                }
+              } else {
+                BadRequest("password is wrong")
+              }
+            }
+            case _ => InternalServerError("faild to get userdata")
+          }
+        }
+      ).getOrElse[Result](BadRequest("bad request for delete user"))
+    }
+
   def registerNewTask =
     Action { request =>
       (
