@@ -51,5 +51,5 @@ Frameworkを用いた小規模Webアプリケーションの開発
 ---
 
 初期ユーザー
-username: `user1`
+username: `user1`, `user2`
 password: `password`
