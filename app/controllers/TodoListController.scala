@@ -60,7 +60,11 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
       } yield {
         users.findByID(userIDStr.toInt) match {
           case Some(user) => Ok(views.html.mypage(user)(request))
-          case _          => InternalServerError("faild to get mypage")
+          case _ =>
+            InternalServerError(
+              views.html
+                .internalservererror("faild to get mypage", "/", "トップページ")
+            )
         }
       }).getOrElse[Result](Redirect("/"))
     }
@@ -134,7 +138,11 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
                   Redirect("/tasks").withSession(
                     "todolist::userID" -> id.toString
                   )
-                case None => InternalServerError("faild to signup")
+                case None =>
+                  InternalServerError(
+                    views.html
+                      .internalservererror("faild to signup", "/", "トップページ")
+                  )
               }
             }
             case _ => BadRequest("this username has already used")
@@ -183,13 +191,29 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
               if (oldHashedPassword == user.password) {
                 users.updatePassword(userID, newHashedPassword) match {
                   case 1 => Ok("success to update")
-                  case _ => InternalServerError("faild to update")
+                  case _ =>
+                    InternalServerError(
+                      views.html
+                        .internalservererror(
+                          "faild to update",
+                          "/mypage",
+                          "マイページ"
+                        )
+                    )
                 }
               } else {
                 BadRequest("password is wrong")
               }
             }
-            case _ => InternalServerError("faild to get userdata")
+            case _ =>
+              InternalServerError(
+                views.html
+                  .internalservererror(
+                    "faild to get userdata",
+                    "/mypage",
+                    "マイページ"
+                  )
+              )
           }
         }
       ).getOrElse[Result](BadRequest("bad request for password update"))
@@ -210,13 +234,29 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
               if (hashedPassword == user.password) {
                 users.delete(userID) match {
                   case 1 => Ok("success to delete user").withNewSession
-                  case _ => InternalServerError("faild to delete user")
+                  case _ =>
+                    InternalServerError(
+                      views.html
+                        .internalservererror(
+                          "faild to delete user",
+                          "/mypage",
+                          "マイページ"
+                        )
+                    )
                 }
               } else {
                 BadRequest("password is wrong")
               }
             }
-            case _ => InternalServerError("faild to get userdata")
+            case _ =>
+              InternalServerError(
+                views.html
+                  .internalservererror(
+                    "faild to get userdata",
+                    "/mypage",
+                    "マイページ"
+                  )
+              )
           }
         }
       ).getOrElse[Result](BadRequest("bad request for delete user"))
@@ -236,7 +276,15 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
             userIDStr.toInt
           ) match {
             case Some(taskID) => Redirect(s"/tasks/$taskID")
-            case None         => InternalServerError(s"faild to add task")
+            case _ =>
+              InternalServerError(
+                views.html
+                  .internalservererror(
+                    "faild to add task",
+                    "/tasks/new",
+                    "新規タスク"
+                  )
+              )
           }
         }
       ).getOrElse[Result](BadRequest(s"bad request for update task"))
@@ -257,7 +305,15 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
             case true =>
               tasks.update(Task(taskID, taskName, description, isDone)) match {
                 case 1 => Redirect(s"/tasks/$taskID")
-                case _ => InternalServerError("faild to update task")
+                case _ =>
+                  InternalServerError(
+                    views.html
+                      .internalservererror(
+                        "faild to update task",
+                        s"/tasks/$taskID/edit",
+                        "タスク編集"
+                      )
+                  )
               }
             case false => BadRequest(s"bad request for update task")
           }
@@ -277,7 +333,15 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
                 case Some(t) => {
                   tasks.delete(t) match {
                     case 1 => Redirect("/tasks")
-                    case _ => InternalServerError("faild to delete task")
+                    case _ =>
+                      InternalServerError(
+                        views.html
+                          .internalservererror(
+                            "faild to delete task",
+                            s"/tasks/$taskID/edit",
+                            "タスク編集"
+                          )
+                      )
                   }
                 }
                 case None => BadRequest("bad request for delete task")
