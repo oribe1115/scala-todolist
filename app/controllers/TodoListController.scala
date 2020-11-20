@@ -74,9 +74,17 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
           case true =>
             tasks.findByID(taskID) match {
               case Some(t) => Ok(views.html.taskdetail(t))
-              case None    => NotFound(s"No task for id=${taskID}")
+              case None =>
+                NotFound(
+                  views.html
+                    .notfound(s"No task for id=${taskID}", "/tasks", "タスク一覧")
+                )
             }
-          case false => NotFound(s"No task for id=${taskID}")
+          case false =>
+            NotFound(
+              views.html
+                .notfound(s"No task for id=${taskID}", "/tasks", "タスク一覧")
+            )
         }
       }).getOrElse[Result](Redirect("/"))
     }
@@ -95,9 +103,17 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
           case true =>
             tasks.findByID(taskID) match {
               case Some(t) => Ok(views.html.taskedit(t)(request))
-              case None    => NotFound(s"No task for id=${taskID}")
+              case None =>
+                NotFound(
+                  views.html
+                    .notfound(s"No task for id=${taskID}", "/tasks", "タスク一覧")
+                )
             }
-          case false => NotFound(s"No task for id=${taskID}")
+          case false =>
+            NotFound(
+              views.html
+                .notfound(s"No task for id=${taskID}", "/tasks", "タスク一覧")
+            )
         }
       }).getOrElse[Result](Redirect("/"))
     }
