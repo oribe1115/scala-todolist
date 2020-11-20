@@ -6,3 +6,7 @@
 .list>*{
     margin-bottom: 10px;
 }
+
+.center-item{
+    margin: auto;
+}

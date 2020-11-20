@@ -15,11 +15,13 @@
         <div class="w3-half">
             <h3>登録済みタスク</h3>
         </div>
+        <div class="w3-right">
+            <a href="/tasks/new"><span class="w3-button w3-green">タスク追加</span></a>
+        </div>
     </div>
     @if(taskList.nonEmpty) {
-    <table id="task-list">
+    <table id="task-list" class="w3-table w3-striped w3-border">
         <tr>
-            <th></th>
             <th>ID</th>
             <th>タスク名</th>
             <th>完了済み</th>
@@ -31,7 +33,4 @@
     } else {
     <p>登録されたメッセージはありません</p>
     }
-
-    <br>
-    <a href="/tasks/new">タスク追加</a>
 }
