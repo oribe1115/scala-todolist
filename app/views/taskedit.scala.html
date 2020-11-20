@@ -6,12 +6,18 @@
     <h3>タスク編集</h3>
     <form action="/register/tasks/@task.id/edit" method="POST">
         @CSRF.formField
-        <input type="text" name="taskName" value="@task.name">
-        <textarea name="description">@task.description</textarea>
-        <input type="checkbox" name="isDone" @if(task.isDone){checked}>
-        <input type="hidden" name="isDone" value="off">
+        <div class="list">
+            <p>タスク名</p>
+            <input type="text" name="taskName" value="@task.name">
+            <p>説明</p>
+            <textarea name="description">@task.description</textarea>
+            <p>完了済み</p>
+            <input type="checkbox" name="isDone" @if(task.isDone){checked}>
+            <input type="hidden" name="isDone" value="off">
+        </div>
         <input type="submit" value="update">
     </form>
+    <br>
     <form action="/register/tasks/@task.id/delete" method="POST">
         @CSRF.formField
         <input type="submit" value="delete">
