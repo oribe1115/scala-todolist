@@ -4,20 +4,44 @@
 
 @views.html.main("") {
     <h3>ユーザー情報</h3>
-        <p>@user.name</p>
-        <p>@user.createdAt</p>
-        <p>@user.updatedAt</p>
+    <table id="user-detail" class="w3-table">
+        <tr>
+            <th>ID</th>
+            <td>@user.id</td>
+        </tr>
+        <tr>
+            <th>ユーザー名</th>
+            <td>@user.name</td>
+        </tr>
+        <tr>
+            <th>作成日時</th>
+            <td>@user.createdAt</td>
+        </tr>
+        <tr>
+            <th>更新日時</th>
+            <td>@user.updatedAt</td>
+        </tr>
+    </table>
     <h3>パスワード変更</h3>
     <form action="/register/user/password" method="POST">
         @CSRF.formField
-        <input type="text" name="oldPassword" >
-        <input type="text" name="newPassword" >
+        <div list>
+            <p>現在のパスワード</p>
+            <input type="text" name="oldPassword">
+            <p>新しいパスワード</p>
+            <input type="text" name="newPassword">
+        </div>
+        <br>
         <input type="submit" value="update">
     </form>
     <h3>退会</h3>
     <form action="/register/user/delete" method="POST">
         @CSRF.formField
-        <input type="text" name="password" >
+        <div class="list">
+             <p>パスワード</p>
+            <input type="text" name="password">
+        </div>
+        <br>
         <input type="submit" value="delete">
     </form>
 }
