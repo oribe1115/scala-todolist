@@ -1,7 +1,5 @@
 # TodoList
 GET     /                           controllers.TodoListController.index
-GET     /hello                      controllers.TodoListController.helloWorld
-GET     /hello/:name                controllers.TodoListController.helloToAny(name: String)
 GET     /signup                     controllers.TodoListController.signup
 GET     /login                      controllers.TodoListController.login
 GET     /mypage                     controllers.TodoListController.mypage
@@ -15,7 +13,6 @@ POST    /register/login             controllers.TodoListController.registerLogin
 POST    /register/user/password     controllers.TodoListController.registerUpdatePassword
 POST    /register/user/delete       controllers.TodoListController.regiseterDeleteUser
 POST    /register/tasks/new         controllers.TodoListController.registerNewTask
-#PUT     /register/tasks/:id         controllers.TodoListController.registerUpdateTask(id: Int)
 POST    /register/tasks/:id/edit    controllers.TodoListController.registerUpdateTask(id: Int)
 POST    /register/tasks/:id/delete  controllers.TodoListController.registerDeleteTask(id: Int)
 
