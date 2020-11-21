@@ -2,7 +2,6 @@
 
 @import helper._
 
-@finishedOnly = @{"on"}
 
 @taskRow(task: models.Task) = {
     <tr id="@task.id">
@@ -29,10 +28,7 @@
             <th>完了済み</th>
         </tr>
         @for(task <- taskList) {
-            @if(finishedOnly != "on" || !task.isDone){
-                @taskRow(task)
-            }
-            
+            @taskRow(task)           
         }
     </table>
     } else {
