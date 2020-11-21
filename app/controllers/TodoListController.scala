@@ -179,7 +179,8 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
             case Some(user) => {
               if (oldHashedPassword == user.password) {
                 users.updatePassword(userID, newHashedPassword) match {
-                  case 1 => Ok("success to update")
+                  case 1 =>
+                    Ok(views.html.ok("success to update", "/mypage", "マイページ"))
                   case _ =>
                     InternalServerError(
                       views.html
@@ -222,7 +223,14 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
             case Some(user) => {
               if (hashedPassword == user.password) {
                 users.delete(userID) match {
-                  case 1 => Ok("success to delete user").withNewSession
+                  case 1 =>
+                    Ok(
+                      views.html.ok(
+                        "success to delete user",
+                        "/signup",
+                        "signup"
+                      )
+                    ).withNewSession
                   case _ =>
                     InternalServerError(
                       views.html
