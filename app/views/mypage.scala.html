@@ -22,10 +22,11 @@
             <td>@user.updatedAt</td>
         </tr>
     </table>
+    <br>
     <h3>パスワード変更</h3>
     <form action="/register/user/password" method="POST">
         @CSRF.formField
-        <div list>
+        <div class="list inputList">
             <p>現在のパスワード</p>
             <input type="text" name="oldPassword">
             <p>新しいパスワード</p>
@@ -34,10 +35,11 @@
         <br>
         <input type="submit" value="update">
     </form>
+    <br>
     <h3>退会</h3>
     <form action="/register/user/delete" method="POST">
         @CSRF.formField
-        <div class="list">
+        <div class="list inputList">
              <p>パスワード</p>
             <input type="text" name="password">
         </div>

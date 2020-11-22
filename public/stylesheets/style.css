@@ -10,3 +10,7 @@
 .center-item{
     margin: auto;
 }
+
+.inputList{
+    max-width: 200px;
+}
