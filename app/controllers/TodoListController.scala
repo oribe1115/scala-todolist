@@ -141,10 +141,22 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
                   )
               }
             }
-            case _ => BadRequest("this username has already used")
+            case _ =>
+              BadRequest(
+                views.html
+                  .badrequest(
+                    "this username has already used",
+                    "/signup",
+                    "signup"
+                  )
+              )
           }
         }
-      ).getOrElse[Result](BadRequest(s"bad request for singup"))
+      ).getOrElse[Result](
+        BadRequest(
+          views.html.badrequest("bad request for singup", "/signup", "signup")
+        )
+      )
     }
 
   def registerLogin =
@@ -162,12 +174,22 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
                 Redirect("/tasks").withSession(
                   "todolist::userID" -> user.id.toString
                 )
-              else BadRequest("password is wrong")
+              else
+                BadRequest(
+                  views.html.badrequest("password is wrong", "/login", "login")
+                )
             }
-            case _ => BadRequest("user not found")
+            case _ =>
+              BadRequest(
+                views.html.badrequest("user not found", "/login", "login")
+              )
           }
         }
-      ).getOrElse[Result](BadRequest(s"bad request for login"))
+      ).getOrElse[Result](
+        BadRequest(
+          views.html.badrequest("bad request for login", "/login", "login")
+        )
+      )
     }
 
   def registerUpdatePassword =
@@ -199,7 +221,9 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
                     )
                 }
               } else {
-                BadRequest("password is wrong")
+                BadRequest(
+                  views.html.badrequest("password is wrong", "/mypage", "マイページ")
+                )
               }
             }
             case _ =>
@@ -213,7 +237,12 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
               )
           }
         }
-      ).getOrElse[Result](BadRequest("bad request for password update"))
+      ).getOrElse[Result](
+        BadRequest(
+          views.html
+            .badrequest("bad request for password update", "/mypage", "マイページ")
+        )
+      )
     }
 
   def regiseterDeleteUser =
@@ -249,7 +278,9 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
                     )
                 }
               } else {
-                BadRequest("password is wrong")
+                BadRequest(
+                  views.html.badrequest("password is wrong", "/mypage", "マイページ")
+                )
               }
             }
             case _ =>
@@ -263,7 +294,12 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
               )
           }
         }
-      ).getOrElse[Result](BadRequest("bad request for delete user"))
+      ).getOrElse[Result](
+        BadRequest(
+          views.html
+            .badrequest("bad request for delete user", "/mypage", "マイページ")
+        )
+      )
     }
 
   def registerNewTask =
@@ -291,7 +327,12 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
               )
           }
         }
-      ).getOrElse[Result](BadRequest(s"bad request for update task"))
+      ).getOrElse[Result](
+        BadRequest(
+          views.html
+            .badrequest("bad request for update task", "/tasks/new", "新規タスク")
+        )
+      )
     }
 
   def registerUpdateTask(taskID: Int) =
@@ -319,10 +360,25 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
                       )
                   )
               }
-            case false => BadRequest(s"bad request for update task")
+            case false =>
+              BadRequest(
+                views.html.badrequest(
+                  "bad request for update task",
+                  s"/tasks/$taskID/edit",
+                  "タスク編集"
+                )
+              )
           }
         }
-      ).getOrElse[Result](BadRequest(s"bad request for update task"))
+      ).getOrElse[Result](
+        BadRequest(
+          views.html.badrequest(
+            "bad request for update task",
+            s"/tasks/$taskID/edit",
+            "タスク編集"
+          )
+        )
+      )
     }
 
   def registerDeleteTask(taskID: Int) =
@@ -348,12 +404,34 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
                       )
                   }
                 }
-                case None => BadRequest("bad request for delete task")
+                case None =>
+                  BadRequest(
+                    views.html.badrequest(
+                      "bad request for delete task",
+                      s"/tasks/$taskID/edit",
+                      "タスク編集"
+                    )
+                  )
               }
-            case false => BadRequest("bad request for delete task")
+            case false =>
+              BadRequest(
+                views.html.badrequest(
+                  "bad request for delete task",
+                  s"/tasks/$taskID/edit",
+                  "タスク編集"
+                )
+              )
           }
         }
-      ).getOrElse[Result](BadRequest("bad request for dekete task"))
+      ).getOrElse[Result](
+        BadRequest(
+          views.html.badrequest(
+            "bad request for delete task",
+            s"/tasks/$taskID/edit",
+            "タスク編集"
+          )
+        )
+      )
     }
 
   def isMyTask(userID: Int, taskID: Int): Boolean = {
