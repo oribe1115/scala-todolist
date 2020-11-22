@@ -3,7 +3,7 @@ GET     /                           controllers.TodoListController.index
 GET     /signup                     controllers.TodoListController.signup
 GET     /login                      controllers.TodoListController.login
 GET     /mypage                     controllers.TodoListController.mypage
-GET     /tasks                      controllers.TodoListController.list(withoutFinish: Option[String])
+GET     /tasks                      controllers.TodoListController.list(withoutFinish: Option[Boolean])
 GET     /tasks/new                  controllers.TodoListController.taskForm
 GET     /tasks/:id                  controllers.TodoListController.taskDetail(id: Int)
 GET     /tasks/:id/edit             controllers.TodoListController.taskEdit(id: Int)

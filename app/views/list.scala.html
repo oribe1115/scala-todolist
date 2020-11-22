@@ -1,4 +1,4 @@
-@(taskList: Seq[models.Task])
+@(taskList: Seq[models.Task], withoutFinish: Boolean)
 
 @import helper._
 
@@ -15,6 +15,11 @@
     <div class="w3-row">
         <div class="w3-half">
             <h3>登録済みタスク</h3>
+            @if(withoutFinish){
+                <a href="/tasks">全てのタスクを表示</a>
+            }else{
+                <a href="/tasks?withoutFinish=true">未完了タスクのみ表示</a>
+            }
         </div>
         <div class="w3-right">
             <a href="/tasks/new"><span class="w3-button w3-green">タスク追加</span></a>

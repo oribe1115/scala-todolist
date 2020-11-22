@@ -22,17 +22,19 @@ class TodoListController @Inject()(tasks: Tasks)(users: Users)(
       Ok(views.html.index("Welcome to Play application!"))
     }
 
-  def list(withoutFinish: Option[String]) =
+  def list(withoutFinish: Option[Boolean]) =
     Action { request =>
       (for {
         userIDStr <- request.session.get("todolist::userID")
       } yield {
         withoutFinish match {
-          case Some("true") =>
+          case Some(true) =>
             Ok(
-              views.html.list(tasks.listByUserIDWithoutFinish(userIDStr.toInt))
+              views.html
+                .list(tasks.listByUserIDWithoutFinish(userIDStr.toInt), true)
             )
-          case _ => Ok(views.html.list(tasks.listByUserID(userIDStr.toInt)))
+          case _ =>
+            Ok(views.html.list(tasks.listByUserID(userIDStr.toInt), false))
         }
       }).getOrElse[Result](Redirect("/"))
     }
